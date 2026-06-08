@@ -534,7 +534,15 @@ function syncSaveRemote(id,next,changes,reset=false){
   jsonp(SYNC_CONFIG.url,{action:"save",payload:JSON.stringify(payload)},20000).then(data=>{
     mergeRemoteState(data);
     toast("Saved online");
-  }).catch(e=>toast("Saved locally; online sync failed"));
+  }).catch(e=>{
+    if(/passcode/i.test(e.message||"")){
+      SYNC_CONFIG.token="";
+      saveSyncConfig();
+      toast("Saved locally; check update passcode");
+    }else{
+      toast("Saved locally; online sync failed: "+e.message);
+    }
+  });
 }
 function manualReview(s){return REVIEW_STATE.records[s.id]||{}}
 function hasSessionOverride(r){return Object.prototype.hasOwnProperty.call(r,"session")}
