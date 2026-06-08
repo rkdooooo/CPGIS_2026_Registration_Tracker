@@ -792,6 +792,13 @@ function displayValue(field,value){
   if(field==="session")return value||"Not scheduled";
   return value||"—";
 }
+function manualChangesForRecord(s,r){
+  const before=snapshotWithReview(s,{}),after=snapshotWithReview(s,r),changes=[];
+  [["status","Status"],["session","Session"],["note","Manual note"]].forEach(([field,label])=>{
+    if((before[field]||"")!==(after[field]||""))changes.push({field,label,from:before[field]||"",to:after[field]||""});
+  });
+  return changes;
+}
 function sessionOptions(s){
   const current=manualReview(s),selected=hasSessionOverride(current)?(current.session||"__none"):"__auto";
   const codes=Object.keys(SESSIONS).sort((a,b)=>TORDER.indexOf(a.slice(0,3))-TORDER.indexOf(b.slice(0,3))||SESSIONS[a].num-SESSIONS[b].num);
@@ -937,6 +944,7 @@ function syncSettingsCard(){
       <div class="audit-actions" style="margin-top:10px">
         <button class="btn primary" onclick="saveSyncSettingsFromForm()">Save sync settings</button>
         <button class="btn" onclick="syncLoadRemote(true)">Load online updates</button>
+        <button class="btn" onclick="syncUploadLocalEdits()">Upload local edits</button>
         <a class="btn" href="${SYNC_SHEET_URL}" target="_blank" rel="noopener" style="text-decoration:none">Open Google Sheet</a>
       </div>
       <div class="sync-state">Status: ${status}. Manual edits are saved locally first. To share edits across devices, enter the update passcode before saving.</div>
@@ -951,6 +959,17 @@ function saveSyncSettingsFromForm(){
   saveSyncConfig();
   toast(syncEnabled()?"Sync settings saved":"Sync URL is not configured");
   if(syncEnabled())syncLoadRemote(true);
+}
+function syncUploadLocalEdits(){
+  if(!ensureSyncForSave()){toast("Passcode needed to upload local edits");return}
+  const ids=Object.keys(REVIEW_STATE.records).filter(id=>byId[id]);
+  if(!ids.length){toast("No local manual edits to upload");return}
+  let done=0;
+  Promise.all(ids.map(id=>{
+    const s=byId[id],r=manualReview(s),changes=manualChangesForRecord(s,r);
+    const payload={token:syncToken(),editor:syncEditor(),id,title:s.title,status:r.status||"",session:hasSessionOverride(r)?(r.session||"__NONE__"):"",note:r.note||"",changes};
+    return jsonp(SYNC_CONFIG.url,{action:"save",payload:JSON.stringify(payload)},20000).then(()=>done++);
+  })).then(()=>syncLoadRemote(false).then(()=>toast(`${done} local edits uploaded`))).catch(e=>toast(`Uploaded ${done}/${ids.length}; check sync settings`));
 }
 function viewNotes(){
   const c=counts(SUBMISSIONS);
