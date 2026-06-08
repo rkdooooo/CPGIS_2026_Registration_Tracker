@@ -454,8 +454,20 @@ function saveReviewState(){try{localStorage.setItem(REVIEW_KEY,JSON.stringify(RE
 function loadSyncConfig(){try{const cfg=JSON.parse(localStorage.getItem(SYNC_KEY)||"{}");if(!cfg.url)cfg.url=SYNC_DEFAULT_URL;return cfg}catch(e){return {url:SYNC_DEFAULT_URL}}}
 function saveSyncConfig(){try{localStorage.setItem(SYNC_KEY,JSON.stringify(SYNC_CONFIG));return true}catch(e){return false}}
 function syncEnabled(){return !!(SYNC_CONFIG.url&&/^https?:\/\//.test(SYNC_CONFIG.url))}
+function syncReady(){return syncEnabled()&&!!syncToken()}
 function syncEditor(){return (SYNC_CONFIG.editor||"").trim()||"Reviewer"}
 function syncToken(){return SYNC_CONFIG.token||""}
+function ensureSyncForSave(){
+  if(!syncEnabled())return false;
+  if(syncToken())return true;
+  const name=prompt("Enter your name for online sync:", SYNC_CONFIG.editor||"Yijia");
+  if(name==null)return false;
+  const token=prompt("Enter the update passcode for shared online edits:");
+  if(!token)return false;
+  SYNC_CONFIG={...SYNC_CONFIG,editor:(name||"Reviewer").trim(),token};
+  saveSyncConfig();
+  return true;
+}
 function historyKey(h){return [h.at,h.id,(h.changes||[]).map(c=>`${c.field}:${c.from}>${c.to}`).join("|")].join("::")}
 function jsonp(url,params={},timeout=15000){
   return new Promise((resolve,reject)=>{
@@ -819,10 +831,11 @@ function saveRecordReview(id){
   REVIEW_STATE.history.unshift({id,title:s.title,at,changes});
   REVIEW_STATE.history=REVIEW_STATE.history.slice(0,1500);
   const saved=saveReviewState();
-  syncSaveRemote(id,next,changes,false);
+  const online=ensureSyncForSave();
+  if(online)syncSaveRemote(id,next,changes,false);
   render();
   openRecord(id);
-  toast(syncEnabled()?"Manual review saved; syncing online":(saved?"Manual review saved":"Saved for this session only"));
+  toast(online?"Manual review saved; syncing online":(saved?"Manual review saved locally":"Saved for this session only"));
 }
 function resetRecordReview(id){
   const s=byId[id],beforeReview={...manualReview(s)};
@@ -836,10 +849,11 @@ function resetRecordReview(id){
   delete REVIEW_STATE.records[id];
   REVIEW_STATE.history.unshift({id,title:s.title,at:new Date().toISOString(),changes});
   const saved=saveReviewState();
-  syncSaveRemote(id,{},changes,true);
+  const online=ensureSyncForSave();
+  if(online)syncSaveRemote(id,{},changes,true);
   render();
   openRecord(id);
-  toast(syncEnabled()?"Manual edit reset; syncing online":(saved?"Manual edit reset":"Reset for this session only"));
+  toast(online?"Manual edit reset; syncing online":(saved?"Manual edit reset locally":"Reset for this session only"));
 }
 function openRecord(id){
   const s=byId[id],k=knownInfo(s),e=eligibilityInfo(s),session=finalSession(s),sessionMeta=SESSIONS[session]||{};
@@ -905,7 +919,7 @@ function openRecord(id){
 
 /* ---------- NOTES & EXPORT ---------- */
 function syncSettingsCard(){
-  const status=syncEnabled()?"Configured":"Not configured";
+  const status=syncReady()?"Ready to save online":(syncEnabled()?"Can load online; passcode needed to save":"Not configured");
   return `<div class="special-card">
       <h3>Online sync</h3>
       <div class="desc">Use this only after the Google Apps Script web app has been deployed. When configured, manual review edits are saved to the shared Google Sheet and loaded by other reviewers.</div>
@@ -925,7 +939,7 @@ function syncSettingsCard(){
         <button class="btn" onclick="syncLoadRemote(true)">Load online updates</button>
         <a class="btn" href="${SYNC_SHEET_URL}" target="_blank" rel="noopener" style="text-decoration:none">Open Google Sheet</a>
       </div>
-      <div class="sync-state">Status: ${status}. Manual edits are still saved locally first; online sync adds a shared copy for collaborators.</div>
+      <div class="sync-state">Status: ${status}. Manual edits are saved locally first. To share edits across devices, enter the update passcode before saving.</div>
     </div>`;
 }
 function saveSyncSettingsFromForm(){
