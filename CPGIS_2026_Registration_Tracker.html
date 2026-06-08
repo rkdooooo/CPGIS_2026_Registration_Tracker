@@ -440,6 +440,7 @@ const byId={}; SUBMISSIONS.forEach(s=>byId[s.id]=s);
 const REVIEW_KEY="CPGIS_2026_MANUAL_REVIEW_V1";
 const SYNC_KEY="CPGIS_2026_SYNC_CONFIG_V1";
 const SYNC_SHEET_URL="https://docs.google.com/spreadsheets/d/1bSbLyOCge7yfNLhqqzhrI4fUae8qAajyG5y26BoEJdc/edit";
+const SYNC_DEFAULT_URL="https://script.google.com/macros/s/AKfycbyMjCB8tLehI-ipLLBhjLR22Rb7na1DNKKzqk6UpMJaJ0n7DqwXU4mRmNnNgzyHg6ma/exec";
 let REVIEW_STATE=loadReviewState();
 let SYNC_CONFIG=loadSyncConfig();
 function loadReviewState(){
@@ -450,7 +451,7 @@ function loadReviewState(){
   }catch(e){return {version:1,records:{},history:[]};}
 }
 function saveReviewState(){try{localStorage.setItem(REVIEW_KEY,JSON.stringify(REVIEW_STATE));return true}catch(e){console.warn("Manual review could not be saved locally",e);return false}}
-function loadSyncConfig(){try{return JSON.parse(localStorage.getItem(SYNC_KEY)||"{}")}catch(e){return {}}}
+function loadSyncConfig(){try{const cfg=JSON.parse(localStorage.getItem(SYNC_KEY)||"{}");if(!cfg.url)cfg.url=SYNC_DEFAULT_URL;return cfg}catch(e){return {url:SYNC_DEFAULT_URL}}}
 function saveSyncConfig(){try{localStorage.setItem(SYNC_KEY,JSON.stringify(SYNC_CONFIG));return true}catch(e){return false}}
 function syncEnabled(){return !!(SYNC_CONFIG.url&&/^https?:\/\//.test(SYNC_CONFIG.url))}
 function syncEditor(){return (SYNC_CONFIG.editor||"").trim()||"Reviewer"}

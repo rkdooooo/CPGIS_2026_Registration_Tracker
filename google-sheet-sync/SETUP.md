@@ -48,6 +48,12 @@ const WRITE_TOKEN = 'cpgis2026';
 
 ## 4. Configure the tracker
 
+Current Web App URL:
+
+```text
+https://script.google.com/macros/s/AKfycbyMjCB8tLehI-ipLLBhjLR22Rb7na1DNKKzqk6UpMJaJ0n7DqwXU4mRmNnNgzyHg6ma/exec
+```
+
 Open the GitHub Pages tracker, go to `Notes` -> `Online sync`, then enter:
 
 - Apps Script Web App URL
