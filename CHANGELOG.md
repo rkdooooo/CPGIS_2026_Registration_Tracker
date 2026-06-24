@@ -4,6 +4,23 @@ Both `index.html` (served by GitHub Pages) and `CPGIS_2026_Registration_Tracker.
 are kept byte-identical. Manual review edits, online sync, and organiser notes
 (`KNOWN_INFO`/`ELIGIBLE_INFO`) are preserved across all changes.
 
+## 2026-06-24
+
+Programme edits per Dr. Feng. These are baked into the embedded data and combine
+with his Google-Sheet review overrides (62 records, auto-loaded on open). Verified:
+with his sync applied, no session exceeds 5 talks.
+
+- **Removed 6 withdrawn presentations** (off-schedule, kept in data flagged
+  `withdrawn`): `9593`, `3304`, `5657`, `5420`, `2177`, `3456`. Only the MasterList
+  `Withdraw` column = true withdrawal; refund-only entries (`189` Meng Zhou,
+  `8680` Shi He) were restored.
+- **Added two Huanghe Jiaotong (HHJTU) special sessions** on Day 3: `HHJ-1`
+  (Wed 09:00–10:30) and `HHJ-2` (Wed 10:45–12:00), 10 students (waived), new
+  `HHJ` track.
+- **Added Hu Shixiong's abstract** (`HHJHU01`, sea-level/coastal RS) to `REE-5`.
+- **Moved Cunjin Xue** (`8558`) `REE-5` → `GFM-7` — frees a REE-5 slot for Hu;
+  GFM-7 had an opening from the `5657` withdrawal; keeps every session ≤5.
+
 ## 2026-06-22
 
 - **New status sub-type "Pending-reg"** (violet). For registrants who wrote in
