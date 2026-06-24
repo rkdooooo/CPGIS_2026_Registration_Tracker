@@ -4,6 +4,18 @@ Both `index.html` (served by GitHub Pages) and `CPGIS_2026_Registration_Tracker.
 are kept byte-identical. Manual review edits, online sync, and organiser notes
 (`KNOWN_INFO`/`ELIGIBLE_INFO`) are preserved across all changes.
 
+## 2026-06-24 — Special sessions (no fixed time)
+
+- The two **Huanghe Jiaotong (HHJTU)** sessions (`HHJ-1`, `HHJ-2`) and the new
+  catch-all session are flagged `special` and shown in a dedicated
+  **"Special sessions"** group pinned to the bottom of the By-time view, with no
+  time slot ("To be scheduled"). They are no longer placed in PS7/PS8 — their
+  day/time can be assigned later.
+- Added **`MIX-1` "Mixed Topics (catch-all)"** — an empty round table for any
+  talk that can't be grouped elsewhere; move talks in from the Records tab.
+- New `MIX` track (neutral gray). The By-session-type view lists `HHJ` and `MIX`
+  as their own groups at the end.
+
 ## 2026-06-24
 
 Programme edits per Dr. Feng. These are baked into the embedded data and combine
