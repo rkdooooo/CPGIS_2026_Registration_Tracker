@@ -1033,6 +1033,14 @@ function viewNotes(){
     </div>
     ${syncSettingsCard()}
     <div class="special-card">
+      <h3>Final programme export</h3>
+      <div class="desc">One consolidated export of the current programme for the final review — every scheduled presentation with its day, parallel session, time, venue/room, section, order, title, authors and status. Reflects all session moves, the saved presentation order, and the latest online sync.</div>
+      <div class="audit-actions">
+        <button class="btn primary" onclick="exportFinalProgrammeHTML()">Open printable programme</button>
+        <button class="btn" onclick="exportFinalProgrammeCSV()">Download CSV (one row per talk)</button>
+      </div>
+    </div>
+    <div class="special-card">
       <h3>Manual review history</h3>
       <div class="desc">Manual changes are stored locally in the browser. The tracker keeps both the current manual overrides and every timestamped change.</div>
       <div class="audit-actions">
@@ -1092,6 +1100,55 @@ function exportManualJSON(){
   download("CPGIS_2026_manual_review_backup_"+stamp()+".json",JSON.stringify(REVIEW_STATE,null,2),"application/json;charset=utf-8");
   toast("Manual review backup exported");
 }
+/* ---- final consolidated programme export (reflects moves, order, and online sync) ---- */
+function programmeSessionsInOrder(){
+  const out=[];
+  for(let n=1;n<=8;n++){
+    Object.keys(SESSIONS).filter(c=>SESSIONS[c].num===n&&!SESSIONS[c].special)
+      .sort((a,b)=>TORDER.indexOf(a.slice(0,3))-TORDER.indexOf(b.slice(0,3))).forEach(c=>out.push(c));
+  }
+  Object.keys(SESSIONS).filter(c=>SESSIONS[c].special)
+    .sort((a,b)=>TORDER.indexOf(a.slice(0,3))-TORDER.indexOf(b.slice(0,3))||(SESSIONS[a].num||0)-(SESSIONS[b].num||0)).forEach(c=>out.push(c));
+  return out;
+}
+function exportAuthors(s){const k=knownInfo(s);return (k.realName&&/^Author\d+$/i.test(s.authors))?k.realName:(s.authors||"");}
+function buildProgrammeCSV(){
+  const cols=["Day","Parallel_Session","Time","Section","Section_Name","Venue","Room","Order","Title","Authors","Submission_ID","Status","Track"];
+  const out=[cols.join(",")];
+  programmeSessionsInOrder().forEach(code=>{const m=SESSIONS[code];
+    const day=m.special?"Special (to be scheduled)":(PS_DAY[m.num]||"");
+    const ps=m.special?"Special":("PS"+m.num);
+    const time=m.special?"To be scheduled":(m.time||"");
+    sessionTalks(code).forEach((s,i)=>out.push([day,ps,time,code,m.name||"",m.venue||"",m.room||"",i+1,s.title||"",exportAuthors(s),s.id,statusLabel(effStatus(s)),s.track||""].map(csvCell).join(",")));
+  });
+  return "﻿"+out.join("\r\n");
+}
+function buildProgrammeHTML(){
+  let body="",lastDay=null;
+  programmeSessionsInOrder().forEach(code=>{const m=SESSIONS[code],talks=sessionTalks(code);
+    if(!talks.length)return;
+    const day=m.special?"Special sessions — to be scheduled":(PS_DAY[m.num]||"");
+    if(day!==lastDay){body+=`<h2>${esc(day)}</h2>`;lastDay=day;}
+    const time=m.special?"To be scheduled":(m.time||"");
+    const room=[m.venue,m.room].filter(Boolean).join(" · ")||"Venue TBA";
+    body+=`<div class="sec"><div class="sec-h"><span class="sec-code">${esc(code)}</span> <span class="sec-name">${esc(m.name||"")}</span></div>`
+      +`<div class="sec-meta">${m.special?"":("PS"+m.num+" · ")}${esc(time)} · ${esc(room)} · ${talks.length} presentations</div><ol>`;
+    talks.forEach(s=>body+=`<li><div class="t-title">${esc(s.title||"")}</div><div class="t-meta">${esc(exportAuthors(s))} — ${esc(statusLabel(effStatus(s)))} · ${esc(s.id)}</div></li>`);
+    body+=`</ol></div>`;
+  });
+  return `<!doctype html><html><head><meta charset="utf-8"><title>CPGIS 2026 — Final Programme</title>`
+    +`<style>body{font:14px/1.5 -apple-system,Segoe UI,Roboto,sans-serif;color:#1d1d1f;max-width:880px;margin:32px auto;padding:0 20px}`
+    +`h1{font-size:22px}h2{font-size:16px;margin:28px 0 10px;border-bottom:2px solid #1d1d1f;padding-bottom:4px}`
+    +`.sec{margin:0 0 14px;padding:12px 14px;border:1px solid #e5e7eb;border-radius:10px;page-break-inside:avoid}`
+    +`.sec-code{font-weight:700}.sec-name{color:#374151}.sec-meta{font-size:12px;color:#6b7280;margin:2px 0 8px}`
+    +`ol{margin:0;padding-left:22px}li{margin:0 0 6px}.t-title{font-size:13.5px}.t-meta{font-size:12px;color:#6b7280}`
+    +`.top{display:flex;justify-content:space-between;align-items:center}button{font:inherit;padding:6px 12px;border:1px solid #c7ccd1;border-radius:8px;background:#fff;cursor:pointer}@media print{.noprint{display:none}}</style></head>`
+    +`<body><div class="top"><h1>CPGIS 2026 — Final Programme <span style="font-weight:400;color:#6b7280">(review draft)</span></h1>`
+    +`<button class="noprint" onclick="window.print()">Print / Save as PDF</button></div>`
+    +`<div style="font-size:12px;color:#6b7280;margin-bottom:8px">Generated ${esc(new Date().toLocaleString())} · ${programmeSessionsInOrder().length} sessions</div>${body}</body></html>`;
+}
+function exportFinalProgrammeCSV(){download("CPGIS_2026_final_programme_"+stamp()+".csv",buildProgrammeCSV(),"text/csv;charset=utf-8");toast("Final programme CSV exported");}
+function exportFinalProgrammeHTML(){const doc=buildProgrammeHTML();const blob=new Blob([doc],{type:"text/html;charset=utf-8"});const url=URL.createObjectURL(blob);const w=window.open(url,"_blank");if(!w){download("CPGIS_2026_final_programme_"+stamp()+".html",doc,"text/html;charset=utf-8");toast("Popup blocked — programme downloaded");}else{toast("Final programme opened in a new tab");}}
 /* ---------- misc ---------- */
 let toastT;function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("show"),1700)}
 function closeModal(){document.getElementById("overlay").classList.remove("show");openCode=null}

@@ -4,6 +4,22 @@ Both `index.html` (served by GitHub Pages) and `CPGIS_2026_Registration_Tracker.
 are kept byte-identical. Manual review edits, online sync, and organiser notes
 (`KNOWN_INFO`/`ELIGIBLE_INFO`) are preserved across all changes.
 
+## 2026-06-25 — Final consolidated programme export
+
+A new **"Final programme export"** card in the **Notes** tab, with two one-click
+exports of the current programme for the final review. Both are built from the
+live runtime state, so they reflect all session moves, the saved presentation
+order, and the latest online sync.
+
+- **Open printable programme** (`exportFinalProgrammeHTML`) — a self-contained
+  HTML page grouped by day → parallel session → section; each talk lists title,
+  authors (real names), status and submission id. Opens in a new tab and has a
+  Print / Save-as-PDF button (falls back to a download if pop-ups are blocked).
+- **Download CSV** (`exportFinalProgrammeCSV`) — one row per scheduled
+  presentation: Day, Parallel Session, Time, Section, Section name, Venue, Room,
+  Order, Title, Authors, Submission ID, Status, Track.
+- Empty sessions and removed/withdrawn submissions are omitted.
+
 ## 2026-06-24 — Drop Student-Competition labels from two regular presenters
 
 Both authors applied to the student competition, were not selected, and present
