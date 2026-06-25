@@ -4,6 +4,36 @@ Both `index.html` (served by GitHub Pages) and `CPGIS_2026_Registration_Tracker.
 are kept byte-identical. Manual review edits, online sync, and organiser notes
 (`KNOWN_INFO`/`ELIGIBLE_INFO`) are preserved across all changes.
 
+## 2026-06-24 — Bake the per-session presentation order into the data
+
+- The reorder feature saves order only in each viewer's browser (it can't ride
+  the sync, which carries just status/session/note), so a colleague's ordering
+  wasn't visible to others. The order Yijia arranged across **39 sessions** is now
+  baked into the `SUBMISSIONS` array, so everyone (incl. Dr. Feng) sees it on load
+  with no local cache needed. Within-session talks were permuted into the chosen
+  order at their existing array positions (nothing else moved; row count unchanged).
+- Sessions reordered: GFM-1…6, LEA-2/5/6, GSC-4…8, UPS-1/3/5/7/8, REE-1…8,
+  CED-2/3/8, TMU-2/3/5/6/7, HEI-2/4/6/8.
+
+## 2026-06-24 — Schedule the Huanghe Jiaotong sessions
+
+- Per Dr. Feng, the two HHJTU sessions now take real Day-3 slots (no longer
+  "Special / to be scheduled"):
+  - **HHJ-1 → Parallel Session 7**, Wed 09:00–10:30, `SRC-01-SR-C / Room-5` — the
+    slot vacated by HEI-7.
+  - **HHJ-2 → Parallel Session 8**, Wed 10:45–12:00, `SRC-01-SR-B / Room-3/4` —
+    the one empty room in PS8.
+  - **MIX-1** (catch-all) stays a Special session with no fixed time.
+- **HEI-7 ("Spatial Cognition and Navigation") dissolved.** Dr. Feng had already
+  moved its three submissions out; these are now baked into the data
+  (`9142`→GFM-7, `8370`→HEI-4, `8999`→MIX-1) and the empty HEI-7 session removed.
+  No room clashes; no session exceeds 5 (verified against the live sync).
+- HEI-7 also held an organiser-confirmed, **programme-only** presentation by
+  **Shiyuan Cheng** ("Mapping Visual Attention to Navigational Cues in Real-World
+  Wayfinding…", 0945 slot, no original submission row). It is now added as record
+  `SHIYUAN01` in the **MIX-1** catch-all (open status), pending a final slot; the
+  Notes entry was updated to match.
+
 ## 2026-06-24 — Reorder talks within a session
 
 - Each presentation row in the session pop-up now has small ▲▼ buttons to move a
