@@ -4,6 +4,21 @@ Both `index.html` (served by GitHub Pages) and `CPGIS_2026_Registration_Tracker.
 are kept byte-identical. Manual review edits, online sync, and organiser notes
 (`KNOWN_INFO`/`ELIGIBLE_INFO`) are preserved across all changes.
 
+## 2026-06-24 — Reorder talks within a session
+
+- Each presentation row in the session pop-up now has small ▲▼ buttons to move a
+  talk up/down within its session. The round-table seat order and the list update
+  live. A **"Reset order"** button (shown once a session has been reordered)
+  restores the original order.
+- The order is saved locally in the browser (`localStorage` key
+  `CPGIS_2026_ORDER_V1`), kept separate from the synced review records. It is
+  intentionally **not** synced — the online merge only carries
+  status/session/note — so reordering never disturbs the organisers' synced
+  edits. To share a finalised order with everyone, bake it into the data order
+  and commit.
+- Restored **Lanze Ying** (`5420`) to `UPS-6` (her original session) in the base
+  data.
+
 ## 2026-06-24 — Special sessions (no fixed time)
 
 - The two **Huanghe Jiaotong (HHJTU)** sessions (`HHJ-1`, `HHJ-2`) and the new
