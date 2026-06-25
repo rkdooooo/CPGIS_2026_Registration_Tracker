@@ -4,6 +4,20 @@ Both `index.html` (served by GitHub Pages) and `CPGIS_2026_Registration_Tracker.
 are kept byte-identical. Manual review edits, online sync, and organiser notes
 (`KNOWN_INFO`/`ELIGIBLE_INFO`) are preserved across all changes.
 
+## 2026-06-24 — Drop Student-Competition labels from two regular presenters
+
+Both authors applied to the student competition, were not selected, and present
+at the conference as regular abstracts — so their stu_comp identity is removed.
+
+- **Xiaoyu Zheng:** her talk was listed twice in `REE-7` — the regular abstract
+  `2198` and a duplicate from the rejected student-competition entry `999902`
+  ("Author02"). Removed the duplicate `999902` from the schedule; kept `2198`.
+- **Xingyu Zhuo:** reclassified `999911` ("Author11") from a rejected stu_comp
+  entry to a regular **Abstract submission** under his real name (Xingyu Zhuo),
+  kept in `TMU-6`; cleared the placeholder name, the `stu_comp` track/REJECT, and
+  the student-competition `KNOWN_INFO` so no "Student competition" badge remains.
+- The student-competition sessions `GSC-1`/`GSC-2` were not touched.
+
 ## 2026-06-24 — Bake the per-session presentation order into the data
 
 - The reorder feature saves order only in each viewer's browser (it can't ride
