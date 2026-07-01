@@ -4,6 +4,57 @@ Both `index.html` (served by GitHub Pages) and `CPGIS_2026_Registration_Tracker.
 are kept byte-identical. Manual review edits, online sync, and organiser notes
 (`KNOWN_INFO`/`ELIGIBLE_INFO`) are preserved across all changes.
 
+## 2026-07-01 — Import the 2026-07-01 final programme (Codex-reviewed)
+
+Applied `CPGIS_2026_final_programme_20260701_codex_recommended_final.csv` (314
+rows, 63 sections) as the new authoritative programme layer, per
+`CLAUDE_CODE_UPDATE_INSTRUCTIONS_20260701.md`. Registration-specific fields
+(`baseRegistered`, `regName`/`regReceipt`/`regInvoice`, `joinNote`, waivers,
+`KNOWN_INFO` overrides) were left untouched — only programme placement fields
+were updated.
+
+- **Removed 3 more presentations** (withdrawn, same pattern as before): `192`
+  (Jianghai... rice/carbon paper, was LEA-5), `2769` (was CED-8), `6004` (was
+  UPS-8).
+- **Promoted 4 to Registered:** `55`, `2164`, `2236`, `6167`.
+- **Applied all session/room/time updates:** every submission's section, day,
+  parallel session, time, venue, room and within-section order now match the
+  final CSV exactly (this naturally carries the `7673`→LEA-5, `3050`→UPS-6,
+  `8510`→UPS-7, `8558`→UPS-8 moves, the global `16:30-17:45`→`16:30-18:00` fix,
+  `SRC-02-LT-52`→`SRC-02-LT-51` rename except `HEI-8` — which now sits in
+  `SRC-02-LT-52` with a blank room — and `HHJ-1`/`HHJ-2` sharing
+  `SRC-01-SR-C / Room-5` back to back on Day 3).
+- **`REE-8` removed** — its papers were redistributed by Codex into `CED-7`,
+  `LEA-5`, `UPS-2`, `REE-7`, `TMU-4`; the section itself no longer has any talks.
+- Verified against the full checklist in the instructions file (314 rows, no
+  duplicate ids, no `16:30-17:45` left, `SRC-02-LT-52` only on `HEI-8`, `HHJ-1`/
+  `HHJ-2` both in `Room-5`, the 10 "do not rename" organised titles untouched).
+- ⚠️ `HEI-3` now schedules **6** talks in the source file (up from 5) — only 1 is
+  currently an actual registered/pending/waived presenter, the other 5 are
+  unregistered, so it doesn't breach the presenter cap today, but flagging since
+  it's more talks than any other section.
+
+### Section-title review workflow (approve / reject / edit)
+
+Codex recommended clearer titles for 16 sections whose talk mix shifted after
+all the moves (list in `section_title_recommended_changes_20260701.csv`).
+Current titles are **kept unchanged** — nothing is silently renamed.
+
+- New **"Section title review"** card in the **Notes** tab: each flagged section
+  shows its current title, the recommended title, and Codex's reason, with
+  **Approve** / **Reject** / **Edit…** (type your own) / **Reset** actions.
+  A name field records who decided.
+  A `finalSessionName(code)` helper resolves the effective title (custom →
+  recommended → current) and is now used everywhere a session title is shown:
+  the table cards, the session modal, the Records session dropdown, and all
+  three CSV/HTML exports.
+- Decisions save to this browser's `localStorage` only (`CPGIS_2026_TITLE_DECISIONS_V1`)
+  — the same limitation as the presentation-order feature, since the shared
+  Google Sheet sync only carries per-submission status/session/note, not
+  per-section title decisions. **Export decisions** / **Import decisions**
+  buttons let the decisions be copied between browsers (e.g. Dr. Feng decides on
+  his machine, exports, and sends the file back to bake into the shared data).
+
 ## 2026-06-25 — Final consolidated programme export
 
 A new **"Final programme export"** card in the **Notes** tab, with two one-click
