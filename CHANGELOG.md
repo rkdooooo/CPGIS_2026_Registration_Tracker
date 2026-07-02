@@ -4,6 +4,12 @@ Both `index.html` (served by GitHub Pages) and `CPGIS_2026_Registration_Tracker.
 are kept byte-identical. Manual review edits, online sync, and organiser notes
 (`KNOWN_INFO`/`ELIGIBLE_INFO`) are preserved across all changes.
 
+## 2026-07-07 — Add a new presentation
+
+- Added **Shaobo Liu** (id `0707`) — *"Space Information Technologies for
+  Sustainable Development of UNESCO-designated sites"*. Left unscheduled (no
+  section) for now; assign it a session from the **Records** tab.
+
 ## 2026-07-01 — Import the 2026-07-01 final programme (Codex-reviewed)
 
 Applied `CPGIS_2026_final_programme_20260701_codex_recommended_final.csv` (314
