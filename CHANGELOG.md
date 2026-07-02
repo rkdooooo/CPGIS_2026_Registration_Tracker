@@ -4,6 +4,14 @@ Both `index.html` (served by GitHub Pages) and `CPGIS_2026_Registration_Tracker.
 are kept byte-identical. Manual review edits, online sync, and organiser notes
 (`KNOWN_INFO`/`ELIGIBLE_INFO`) are preserved across all changes.
 
+## 2026-07-02 — Room swap: Room-8 → Room-6
+
+The university swapped the room for `SRC-02-SR-D`. Confirmed against Dr. Feng's
+updated file — the only difference from the prior import was the room number —
+and applied: **`GSC-1`, `GSC-2`, `GSC-3`, `TMU-4`, `TMU-5`, `TMU-6`, `TMU-7`,
+`TMU-8`** now show `Room-6` instead of `Room-8` (same venue, same day/time/order,
+nothing else changed).
+
 ## 2026-07-02 — Add a new presentation
 
 - Added **Shaobo Liu** (id `0707`) — *"Space Information Technologies for
