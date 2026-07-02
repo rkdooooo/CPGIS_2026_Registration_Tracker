@@ -4,11 +4,38 @@ Both `index.html` (served by GitHub Pages) and `CPGIS_2026_Registration_Tracker.
 are kept byte-identical. Manual review edits, online sync, and organiser notes
 (`KNOWN_INFO`/`ELIGIBLE_INFO`) are preserved across all changes.
 
-## 2026-07-07 — Add a new presentation
+## 2026-07-02 — Add a new presentation
 
 - Added **Shaobo Liu** (id `0707`) — *"Space Information Technologies for
   Sustainable Development of UNESCO-designated sites"*. Left unscheduled (no
   section) for now; assign it a session from the **Records** tab.
+
+## 2026-07-02 — Import Dr. Feng's final programme; remove the title-review workflow
+
+Applied `CPGIS_2026_final_programme_20260702.csv` (313 rows, 63 sections) —
+Dr. Feng's confirmed final version — as the new programme layer, same process
+as the 07-01 import (only programme placement fields touched; registration
+fields untouched).
+
+- **Section titles now set directly** from this file — no more "current vs
+  recommended" distinction. Of the 16 sections Codex flagged on 07-01: 10 got
+  exactly Codex's recommended title, 2 (`UPS-7`, `CED-8`) got Dr. Feng's own
+  wording, and 5 (`REE-4`, `TMU-4`, `TMU-5`, `REE-7`, `TMU-8`) were kept as they
+  were — all now baked in as final.
+- **Removed 1 more presentation:** `3522` (was `GSC-7`) — not in the confirmed
+  file, withdrawn the same way as prior removals.
+- Applied the section/day/time/venue/room/order refresh for all 313 covered
+  submissions (checked against the live sync first — the 32 rows the CSV shows
+  as "Registered" already resolved to `registered` via existing sync overrides,
+  so no redundant base changes were needed there).
+- Verified against the same checklist as 07-01 (313 rows, no duplicate ids, no
+  stale `16:30-17:45`, `SRC-02-LT-52` only on `HEI-8`, `HHJ-1`/`HHJ-2` both in
+  `Room-5`, the 10 "do not rename" titles untouched). `HEI-3` still schedules 6
+  talks (unchanged from 07-01, evidently intentional).
+- **Removed the section-title review feature** added on 07-01 (the
+  Approve/Reject/Edit card, `TITLE_DECISIONS` local state, `finalSessionName()`
+  helper) now that Dr. Feng's titles are final — no more in-app review needed.
+  All title display code reverted to reading `SESSIONS[code].name` directly.
 
 ## 2026-07-01 — Import the 2026-07-01 final programme (Codex-reviewed)
 
